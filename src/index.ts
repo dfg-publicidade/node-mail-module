@@ -1,10 +1,10 @@
 import App from '@dfgpublicidade/node-app-module';
 import appRoot from 'app-root-path';
 import fs from 'fs-extra';
-import nodemailer, { Transporter } from 'nodemailer';
-import { MailOptions } from 'nodemailer/lib/json-transport';
 import MailSendindErrors from './enums/mailSendingErrors';
 import MailSendingParams from './interfaces/mailSendingParams';
+import SesMailSender from './mail/sesMailSender';
+import SmtpMailSender from './mail/smtpMailSender';
 
 class MailSender {
     public static async send(app: App, parameters: MailSendingParams): Promise<any> {
@@ -36,27 +36,23 @@ class MailSender {
         }
     }
 
-    private static async sendMail(app: App, parametros: MailSendingParams, mensagem: string): Promise<any> {
-        const transporter: Transporter = nodemailer.createTransport({
-            host: app.config.mail.host,
-            port: app.config.mail.port,
-            secure: app.config.mail.ssl, // use SSL
-            auth: {
-                user: app.config.mail.user,
-                pass: app.config.mail.password
+    private static async sendMail(app: App, parameters: MailSendingParams, message: string): Promise<any> {
+        let type: string = app.config.mail.type;
+
+        if (parameters.attachments) {
+            type = 'smtp';
+        }
+
+        switch (type) {
+            case 'smtp': {
+                return SmtpMailSender.sendMail(app, parameters, message);
             }
-        });
+            case 'aws-ses': {
+                return SesMailSender.sendMail(app, parameters, message);
+            }
+        }
 
-        const mailOptions: MailOptions = {
-            from: parametros.from,
-            replyTo: parametros.from,
-            to: parametros.to,
-            subject: (process.env.NODE_ENV !== 'production' ? '[' + process.env.NODE_ENV.toUpperCase() + '] ' : '') + parametros.subject,
-            html: mensagem,
-            attachments: parametros.attachments
-        };
-
-        return transporter.sendMail(mailOptions);
+        return Promise.reject(MailSendindErrors.SENDER_TYPE_NOT_DEFINED);
     }
 }
 

@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "@dfgpublicidade/node-app-module": "git+https://github.com/dfg-publicidade/node-app-module.git",
+        "@dfgpublicidade/node-aws-module": "git+https://github.com/dfg-publicidade/node-aws-module.git",
         "@dfgpublicidade/node-files-module": "git+https://github.com/dfg-publicidade/node-files-module.git",
         "nodemailer": "^6.4.17"
     },
