@@ -30,7 +30,7 @@ class SesMailSender {
         return new aws_sdk_1.default.SES({
             accessKeyId: app.config.mail.user,
             secretAccessKey: app.config.mail.password
-        }).sendEmail(params);
+        }).sendEmail(params).promise();
     }
 }
 exports.default = SesMailSender;

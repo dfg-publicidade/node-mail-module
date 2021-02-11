@@ -29,7 +29,7 @@ class SesMailSender {
         return new AWS.SES({
             accessKeyId: app.config.mail.user,
             secretAccessKey: app.config.mail.password
-        }).sendEmail(params);
+        }).sendEmail(params).promise();
     }
 }
 
