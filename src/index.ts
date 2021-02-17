@@ -14,13 +14,13 @@ class MailSender {
         else {
             if (parameters.template) {
                 try {
-                    let html: string = await fs.readFile(appRoot + '/templates/' + parameters.template, { encoding: 'UTF-8' });
+                    let html: string = await fs.readFile(`${appRoot}/templates/${parameters.template}`, { encoding: 'UTF-8' });
 
                     html = html.replace('{text}', parameters.message);
 
                     if (parameters.templateCompl) {
                         Object.keys(parameters.templateCompl).forEach((key: string): any => {
-                            html = html.replace('{' + key + '}', parameters.templateCompl[key] ? parameters.templateCompl[key] : '');
+                            html = html.replace(`{${key}}`, parameters.templateCompl[key] ? parameters.templateCompl[key] : '');
                         });
                     }
 

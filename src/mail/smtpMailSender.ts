@@ -15,11 +15,13 @@ class SmtpMailSender {
             }
         });
 
+        const env: string = (process.env.NODE_ENV !== 'production' ? `[${process.env.NODE_ENV.toUpperCase()}] ` : '');
+
         const mailOptions: MailOptions = {
             from: parameters.from,
             replyTo: parameters.from,
             to: parameters.to,
-            subject: (process.env.NODE_ENV !== 'production' ? '[' + process.env.NODE_ENV.toUpperCase() + '] ' : '') + parameters.subject,
+            subject: env + parameters.subject,
             html: message,
             attachments: parameters.attachments
         };

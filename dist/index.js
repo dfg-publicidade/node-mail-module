@@ -18,11 +18,11 @@ class MailSender {
         else {
             if (parameters.template) {
                 try {
-                    let html = await fs_extra_1.default.readFile(app_root_path_1.default + '/templates/' + parameters.template, { encoding: 'UTF-8' });
+                    let html = await fs_extra_1.default.readFile(`${app_root_path_1.default}/templates/${parameters.template}`, { encoding: 'UTF-8' });
                     html = html.replace('{text}', parameters.message);
                     if (parameters.templateCompl) {
                         Object.keys(parameters.templateCompl).forEach((key) => {
-                            html = html.replace('{' + key + '}', parameters.templateCompl[key] ? parameters.templateCompl[key] : '');
+                            html = html.replace(`{${key}}`, parameters.templateCompl[key] ? parameters.templateCompl[key] : '');
                         });
                     }
                     return this.sendMail(app, parameters, html);

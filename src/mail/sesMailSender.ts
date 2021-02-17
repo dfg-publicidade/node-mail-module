@@ -4,6 +4,8 @@ import MailSendingParams from '../interfaces/mailSendingParams';
 
 class SesMailSender {
     public static async sendMail(app: App, parameters: MailSendingParams, message: string): Promise<any> {
+        const env: string = (process.env.NODE_ENV !== 'production' ? `[${process.env.NODE_ENV.toUpperCase()}] ` : '');
+
         const params: any = {
             Destination: {
                 ToAddresses: parameters.to.split(';')
@@ -18,7 +20,7 @@ class SesMailSender {
                 },
                 Subject: {
                     Charset: 'UTF-8',
-                    Data: (process.env.NODE_ENV !== 'production' ? '[' + process.env.NODE_ENV.toUpperCase() + '] ' : '') + parameters.subject
+                    Data: env + parameters.subject
                 }
             },
             ReplyToAddresses: [

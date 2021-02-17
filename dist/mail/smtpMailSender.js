@@ -15,11 +15,12 @@ class SmtpMailSender {
                 pass: app.config.mail.password
             }
         });
+        const env = (process.env.NODE_ENV !== 'production' ? `[${process.env.NODE_ENV.toUpperCase()}] ` : '');
         const mailOptions = {
             from: parameters.from,
             replyTo: parameters.from,
             to: parameters.to,
-            subject: (process.env.NODE_ENV !== 'production' ? '[' + process.env.NODE_ENV.toUpperCase() + '] ' : '') + parameters.subject,
+            subject: env + parameters.subject,
             html: message,
             attachments: parameters.attachments
         };

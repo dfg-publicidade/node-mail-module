@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const aws_sdk_1 = __importDefault(require("aws-sdk"));
 class SesMailSender {
     static async sendMail(app, parameters, message) {
+        const env = (process.env.NODE_ENV !== 'production' ? `[${process.env.NODE_ENV.toUpperCase()}] ` : '');
         const params = {
             Destination: {
                 ToAddresses: parameters.to.split(';')
@@ -20,7 +21,7 @@ class SesMailSender {
                 },
                 Subject: {
                     Charset: 'UTF-8',
-                    Data: (process.env.NODE_ENV !== 'production' ? '[' + process.env.NODE_ENV.toUpperCase() + '] ' : '') + parameters.subject
+                    Data: env + parameters.subject
                 }
             },
             ReplyToAddresses: [
