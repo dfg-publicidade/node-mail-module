@@ -22,7 +22,8 @@ class MailSender {
                     html = html.replace('{text}', parameters.message);
                     if (parameters.templateCompl) {
                         Object.keys(parameters.templateCompl).forEach((key) => {
-                            html = html.replace(`{${key}}`, parameters.templateCompl[key] ? parameters.templateCompl[key] : '');
+                            const regex = new RegExp(`{${key}}`, 'ig');
+                            html = html.replace(regex, parameters.templateCompl[key] ? parameters.templateCompl[key] : '');
                         });
                     }
                     return this.sendMail(app, parameters, html);

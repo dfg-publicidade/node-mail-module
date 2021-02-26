@@ -20,7 +20,8 @@ class MailSender {
 
                     if (parameters.templateCompl) {
                         Object.keys(parameters.templateCompl).forEach((key: string): any => {
-                            html = html.replace(`{${key}}`, parameters.templateCompl[key] ? parameters.templateCompl[key] : '');
+                            const regex: RegExp = new RegExp(`{${key}}`, 'ig');
+                            html = html.replace(regex, parameters.templateCompl[key] ? parameters.templateCompl[key] : '');
                         });
                     }
 
