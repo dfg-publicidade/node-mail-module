@@ -12,29 +12,33 @@ const sesMailSender_1 = __importDefault(require("./mail/sesMailSender"));
 const smtpMailSender_1 = __importDefault(require("./mail/smtpMailSender"));
 class MailSender {
     static async send(app, parameters) {
-        if (!parameters || !parameters.to || !parameters.subject) {
-            return Promise.reject(mailSendingErrors_1.default.INVALID_PARAMETERS);
+        if (!parameters || !parameters.from || !parameters.to || !parameters.subject) {
+            return Promise.reject(new Error(mailSendingErrors_1.default.INVALID_PARAMETERS));
+        }
+        else if (!app.config.mail || !app.config.mail.type) {
+            throw new Error('Mail config. was not provided.');
         }
         else {
-            if (parameters.template) {
-                try {
-                    let html = await fs_extra_1.default.readFile(`${app_root_path_1.default}/templates/${parameters.template}`, { encoding: 'UTF-8' });
-                    html = html.replace('{text}', parameters.message);
-                    if (parameters.templateCompl) {
-                        Object.keys(parameters.templateCompl).forEach((key) => {
-                            const regex = new RegExp(`{${key}}`, 'ig');
-                            html = html.replace(regex, parameters.templateCompl[key] ? parameters.templateCompl[key] : '');
-                        });
-                    }
-                    return this.sendMail(app, parameters, html);
-                }
-                catch (error) {
-                    return Promise.reject(mailSendingErrors_1.default.TEMPLATE_NOT_FOUND);
-                }
+            const message = parameters.template
+                ? await this.getTemplate(parameters)
+                : parameters.message;
+            return this.sendMail(app, parameters, message);
+        }
+    }
+    static async getTemplate(parameters) {
+        try {
+            let html = await fs_extra_1.default.readFile(`${app_root_path_1.default}/templates/${parameters.template}`, { encoding: 'UTF-8' });
+            html = html.replace('{text}', parameters.message);
+            if (parameters.templateCompl) {
+                Object.keys(parameters.templateCompl).forEach((key) => {
+                    const regex = new RegExp(`{${key}}`, 'ig');
+                    html = html.replace(regex, parameters.templateCompl[key] ? parameters.templateCompl[key] : '');
+                });
             }
-            else {
-                return this.sendMail(app, parameters, parameters.message);
-            }
+            return html;
+        }
+        catch (error) {
+            return Promise.reject(new Error(mailSendingErrors_1.default.TEMPLATE_NOT_FOUND));
         }
     }
     static async sendMail(app, parameters, message) {
@@ -50,7 +54,7 @@ class MailSender {
                 return sesMailSender_1.default.sendMail(app, parameters, message);
             }
         }
-        return Promise.reject(mailSendingErrors_1.default.SENDER_TYPE_NOT_DEFINED);
+        return Promise.reject(new Error(mailSendingErrors_1.default.SENDER_TYPE_NOT_DEFINED));
     }
 }
 exports.default = MailSender;

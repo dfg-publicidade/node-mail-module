@@ -8,32 +8,38 @@ import SmtpMailSender from './mail/smtpMailSender';
 
 class MailSender {
     public static async send(app: App, parameters: MailSendingParams): Promise<any> {
-        if (!parameters || !parameters.to || !parameters.subject) {
-            return Promise.reject(MailSendindErrors.INVALID_PARAMETERS);
+        if (!parameters || !parameters.from || !parameters.to || !parameters.subject) {
+            return Promise.reject(new Error(MailSendindErrors.INVALID_PARAMETERS));
+        }
+        else if (!app.config.mail || !app.config.mail.type) {
+            throw new Error('Mail config. was not provided.');
         }
         else {
-            if (parameters.template) {
-                try {
-                    let html: string = await fs.readFile(`${appRoot}/templates/${parameters.template}`, { encoding: 'UTF-8' });
+            const message: string = parameters.template
+                ? await this.getTemplate(parameters)
+                : parameters.message;
 
-                    html = html.replace('{text}', parameters.message);
+            return this.sendMail(app, parameters, message);
+        }
+    }
 
-                    if (parameters.templateCompl) {
-                        Object.keys(parameters.templateCompl).forEach((key: string): any => {
-                            const regex: RegExp = new RegExp(`{${key}}`, 'ig');
-                            html = html.replace(regex, parameters.templateCompl[key] ? parameters.templateCompl[key] : '');
-                        });
-                    }
+    private static async getTemplate(parameters: MailSendingParams): Promise<string> {
+        try {
+            let html: string = await fs.readFile(`${appRoot}/templates/${parameters.template}`, { encoding: 'UTF-8' });
 
-                    return this.sendMail(app, parameters, html);
-                }
-                catch (error) {
-                    return Promise.reject(MailSendindErrors.TEMPLATE_NOT_FOUND);
-                }
+            html = html.replace('{text}', parameters.message);
+
+            if (parameters.templateCompl) {
+                Object.keys(parameters.templateCompl).forEach((key: string): any => {
+                    const regex: RegExp = new RegExp(`{${key}}`, 'ig');
+                    html = html.replace(regex, parameters.templateCompl[key] ? parameters.templateCompl[key] : '');
+                });
             }
-            else {
-                return this.sendMail(app, parameters, parameters.message);
-            }
+
+            return html;
+        }
+        catch (error: any) {
+            return Promise.reject(new Error(MailSendindErrors.TEMPLATE_NOT_FOUND));
         }
     }
 
@@ -53,7 +59,7 @@ class MailSender {
             }
         }
 
-        return Promise.reject(MailSendindErrors.SENDER_TYPE_NOT_DEFINED);
+        return Promise.reject(new Error(MailSendindErrors.SENDER_TYPE_NOT_DEFINED));
     }
 }
 

@@ -2,12 +2,13 @@ interface MailSendingParams {
     from: string;
     to: string;
     subject: string;
-    message: string;
-    template: string;
-    templateCompl: any;
+    message?: string;
+    template?: string;
+    templateCompl?: any;
     attachments?: {
         filename: string;
-        path: string;
+        path?: string;
+        content?: Buffer;
     }[];
 }
 
