@@ -186,9 +186,9 @@ describe('index.ts', (): void => {
         });
 
         expect(result).to.exist;
-        expect(result).to.have.property('accepted').not.be.empty;
+        expect(result).to.have.property('accepted').not.be.undefined;
         expect(result).to.have.property('response').which.contain('250 Ok');
-        expect(result).to.have.property('messageId').not.be.empty;
+        expect(result).to.have.property('messageId').not.be.undefined;
     });
 
     it('8. send', async (): Promise<void> => {
@@ -248,9 +248,9 @@ describe('index.ts', (): void => {
         });
 
         expect(result).to.exist;
-        expect(result).to.have.property('accepted').not.be.empty;
+        expect(result).to.have.property('accepted').not.be.undefined;
         expect(result).to.have.property('response').which.contain('250 Ok');
-        expect(result).to.have.property('messageId').not.be.empty;
+        expect(result).to.have.property('messageId').not.be.undefined;
     });
 
     it('10. send', async (): Promise<void> => {
@@ -287,9 +287,9 @@ describe('index.ts', (): void => {
         });
 
         expect(result).to.exist;
-        expect(result).to.have.property('accepted').not.be.empty;
+        expect(result).to.have.property('accepted').not.be.undefined;
         expect(result).to.have.property('response').which.contain('250 Ok');
-        expect(result).to.have.property('messageId').not.be.empty;
+        expect(result).to.have.property('messageId').not.be.undefined;
     });
 
     it('11. send', async (): Promise<void> => {
@@ -317,9 +317,9 @@ describe('index.ts', (): void => {
         });
 
         expect(result).to.exist;
-        expect(result).to.have.property('accepted').not.be.empty;
+        expect(result).to.have.property('accepted').not.be.undefined;
         expect(result).to.have.property('response').which.contain('250 OK');
-        expect(result).to.have.property('messageId').not.be.empty;
+        expect(result).to.have.property('messageId').not.be.undefined;
     });
 
     it('12. send', async (): Promise<void> => {
@@ -354,9 +354,9 @@ describe('index.ts', (): void => {
         });
 
         expect(result).to.exist;
-        expect(result).to.have.property('accepted').not.be.empty;
+        expect(result).to.have.property('accepted').not.be.undefined;
         expect(result).to.have.property('response').which.contain('250 Ok');
-        expect(result).to.have.property('messageId').not.be.empty;
+        expect(result).to.have.property('messageId').not.be.undefined;
     });
 
     it('13. send', async (): Promise<void> => {
@@ -381,9 +381,9 @@ describe('index.ts', (): void => {
         });
 
         expect(result).to.exist;
-        expect(result).to.have.property('accepted').not.be.empty;
+        expect(result).to.have.property('accepted').not.be.undefined;
         expect(result).to.have.property('response').which.contain('250 Ok');
-        expect(result).to.have.property('messageId').not.be.empty;
+        expect(result).to.have.property('messageId').not.be.undefined;
     });
 
     it('14. send', async (): Promise<void> => {
@@ -413,8 +413,8 @@ describe('index.ts', (): void => {
         });
 
         expect(result).to.exist;
-        expect(result).to.have.property('accepted').not.be.empty;
+        expect(result).to.have.property('accepted').not.be.undefined;
         expect(result).to.have.property('response').which.contain('250 OK');
-        expect(result).to.have.property('messageId').not.be.empty;
+        expect(result).to.have.property('messageId').not.be.undefined;
     });
 });
