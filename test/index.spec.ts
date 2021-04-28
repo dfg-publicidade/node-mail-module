@@ -43,11 +43,11 @@ describe('index.ts', (): void => {
     });
 
     after(async (): Promise<void> => {
-
+        process.env.NODE_ENV = 'test';
     });
 
     it('1. send', async (): Promise<void> => {
-        let sendError;
+        let sendError: any;
         try {
             await MailSender.send(app, undefined);
         }
@@ -59,7 +59,7 @@ describe('index.ts', (): void => {
     });
 
     it('2. send', async (): Promise<void> => {
-        let sendError;
+        let sendError: any;
         try {
             await MailSender.send(app, {
                 from: undefined,
@@ -75,7 +75,7 @@ describe('index.ts', (): void => {
     });
 
     it('3. send', async (): Promise<void> => {
-        let sendError;
+        let sendError: any;
         try {
             await MailSender.send(app, {
                 from: process.env.MAIL_TEST_FROM,
@@ -91,7 +91,7 @@ describe('index.ts', (): void => {
     });
 
     it('4. send', async (): Promise<void> => {
-        let sendError;
+        let sendError: any;
         try {
             await MailSender.send(app, {
                 from: process.env.MAIL_TEST_FROM,
@@ -107,7 +107,7 @@ describe('index.ts', (): void => {
     });
 
     it('5. send', async (): Promise<void> => {
-        let sendError;
+        let sendError: any;
         try {
             await MailSender.send(app, {
                 from: process.env.MAIL_TEST_FROM,
@@ -123,7 +123,7 @@ describe('index.ts', (): void => {
     });
 
     it('5. send', async (): Promise<void> => {
-        let sendError;
+        let sendError: any;
         try {
             await MailSender.send({
                 ...app,
@@ -144,7 +144,7 @@ describe('index.ts', (): void => {
     });
 
     it('6. send', async (): Promise<void> => {
-        let sendError;
+        let sendError: any;
         try {
             await MailSender.send({
                 ...app,
@@ -192,7 +192,7 @@ describe('index.ts', (): void => {
     });
 
     it('8. send', async (): Promise<void> => {
-        let sendError;
+        let sendError: any;
         try {
             await MailSender.send({
                 ...app,
@@ -298,8 +298,8 @@ describe('index.ts', (): void => {
             config: {
                 mail: {
                     type: 'aws-ses',
-                    user: 'AKIAXKG7B7MU36H3QSMB',
-                    password: 'TKFQm4wlldC1xMJGNI04gekM21rVuG7zqCt2FCjT',
+                    user: process.env.MAIL_TEST_AWS_USER,
+                    password: process.env.MAIL_TEST_AWS_PASSWORD,
                     region: process.env.MAIL_TEST_AWS_REGION
                 }
             }
@@ -317,9 +317,8 @@ describe('index.ts', (): void => {
         });
 
         expect(result).to.exist;
-        expect(result).to.have.property('accepted').not.be.undefined;
-        expect(result).to.have.property('response').which.contain('250 OK');
-        expect(result).to.have.property('messageId').not.be.undefined;
+        expect(result).to.have.property('ResponseMetadata');
+        expect(result).to.have.property('MessageId');
     });
 
     it('12. send', async (): Promise<void> => {
@@ -384,6 +383,8 @@ describe('index.ts', (): void => {
         expect(result).to.have.property('accepted').not.be.undefined;
         expect(result).to.have.property('response').which.contain('250 Ok');
         expect(result).to.have.property('messageId').not.be.undefined;
+
+        process.env.NODE_ENV = 'test';
     });
 
     it('14. send', async (): Promise<void> => {
@@ -394,8 +395,8 @@ describe('index.ts', (): void => {
             config: {
                 mail: {
                     type: 'aws-ses',
-                    user: 'AKIAXKG7B7MU36H3QSMB',
-                    password: 'TKFQm4wlldC1xMJGNI04gekM21rVuG7zqCt2FCjT',
+                    user: process.env.MAIL_TEST_AWS_USER,
+                    password: process.env.MAIL_TEST_AWS_PASSWORD,
                     region: process.env.MAIL_TEST_AWS_REGION
                 }
             }
@@ -413,8 +414,9 @@ describe('index.ts', (): void => {
         });
 
         expect(result).to.exist;
-        expect(result).to.have.property('accepted').not.be.undefined;
-        expect(result).to.have.property('response').which.contain('250 OK');
-        expect(result).to.have.property('messageId').not.be.undefined;
+        expect(result).to.have.property('ResponseMetadata');
+        expect(result).to.have.property('MessageId');
+
+        process.env.NODE_ENV = 'test';
     });
 });
