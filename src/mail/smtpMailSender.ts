@@ -19,7 +19,7 @@ class SmtpMailSender {
 
         const mailOptions: MailOptions = {
             from: parameters.from,
-            replyTo: parameters.from,
+            replyTo: parameters.replyTo ? parameters.replyTo : parameters.from,
             to: parameters.to,
             subject: env + parameters.subject,
             html: message,

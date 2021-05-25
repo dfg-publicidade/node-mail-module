@@ -25,7 +25,7 @@ class SesMailSender {
                 }
             },
             ReplyToAddresses: [
-                parameters.from
+                parameters.replyTo ? parameters.replyTo : parameters.from
             ]
         };
         return new aws_sdk_1.default.SES({

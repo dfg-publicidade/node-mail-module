@@ -1,6 +1,7 @@
 interface MailSendingParams {
     from: string;
     to: string;
+    replyTo?: string;
     subject: string;
     message?: string;
     template?: string;

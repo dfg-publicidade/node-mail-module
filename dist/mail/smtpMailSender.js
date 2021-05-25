@@ -18,7 +18,7 @@ class SmtpMailSender {
         const env = (process.env.NODE_ENV !== 'production' ? `[${process.env.NODE_ENV.toUpperCase()}] ` : '');
         const mailOptions = {
             from: parameters.from,
-            replyTo: parameters.from,
+            replyTo: parameters.replyTo ? parameters.replyTo : parameters.from,
             to: parameters.to,
             subject: env + parameters.subject,
             html: message,

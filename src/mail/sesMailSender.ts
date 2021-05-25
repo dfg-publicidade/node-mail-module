@@ -24,7 +24,7 @@ class SesMailSender {
                 }
             },
             ReplyToAddresses: [
-                parameters.from
+                parameters.replyTo ? parameters.replyTo : parameters.from
             ]
         };
 
