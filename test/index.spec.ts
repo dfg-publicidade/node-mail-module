@@ -192,6 +192,32 @@ describe('index.ts', (): void => {
     });
 
     it('8. send', async (): Promise<void> => {
+        const result: any = await MailSender.send({
+            ...app,
+            config: {
+                mail: {
+                    type: 'smtp',
+                    host: process.env.MAIL_TEST_HOST,
+                    port: process.env.MAIL_TEST_PORT,
+                    ssl: process.env.MAIL_TEST_SSL,
+                    user: process.env.MAIL_TEST_USER,
+                    password: process.env.MAIL_TEST_PASSWORD
+                }
+            }
+        } as App, {
+            from: process.env.MAIL_TEST_FROM,
+            to: process.env.MAIL_TEST_TO,
+            replyTo: process.env.MAIL_TEST_TO,
+            subject: 'Test mail'
+        });
+
+        expect(result).to.exist;
+        expect(result).to.have.property('accepted').not.be.undefined;
+        expect(result).to.have.property('response').which.contain('250 Ok');
+        expect(result).to.have.property('messageId').not.be.undefined;
+    });
+
+    it('9. send', async (): Promise<void> => {
         let sendError: any;
         try {
             await MailSender.send({
@@ -220,7 +246,7 @@ describe('index.ts', (): void => {
         expect(sendError.message).to.be.eq('Template file not found.');
     });
 
-    it('9. send', async (): Promise<void> => {
+    it('10. send', async (): Promise<void> => {
         const result: any = await MailSender.send({
             ...app,
             config: {
@@ -253,7 +279,7 @@ describe('index.ts', (): void => {
         expect(result).to.have.property('messageId').not.be.undefined;
     });
 
-    it('10. send', async (): Promise<void> => {
+    it('11. send', async (): Promise<void> => {
         const result: any = await MailSender.send({
             ...app,
             config: {
@@ -292,7 +318,7 @@ describe('index.ts', (): void => {
         expect(result).to.have.property('messageId').not.be.undefined;
     });
 
-    it('11. send', async (): Promise<void> => {
+    it('12. send', async (): Promise<void> => {
         const result: any = await MailSender.send({
             ...app,
             config: {
@@ -321,7 +347,7 @@ describe('index.ts', (): void => {
         expect(result).to.have.property('MessageId');
     });
 
-    it('12. send', async (): Promise<void> => {
+    it('13. send', async (): Promise<void> => {
         const result: any = await MailSender.send({
             ...app,
             config: {
@@ -358,7 +384,7 @@ describe('index.ts', (): void => {
         expect(result).to.have.property('messageId').not.be.undefined;
     });
 
-    it('13. send', async (): Promise<void> => {
+    it('14. send', async (): Promise<void> => {
         process.env.NODE_ENV = 'production';
 
         const result: any = await MailSender.send({
@@ -387,7 +413,7 @@ describe('index.ts', (): void => {
         process.env.NODE_ENV = 'test';
     });
 
-    it('14. send', async (): Promise<void> => {
+    it('15. send', async (): Promise<void> => {
         process.env.NODE_ENV = 'production';
 
         const result: any = await MailSender.send({
@@ -403,6 +429,40 @@ describe('index.ts', (): void => {
         } as App, {
             from: process.env.MAIL_TEST_FROM,
             to: process.env.MAIL_TEST_TO,
+            subject: 'Test mail',
+            message: `
+                situation: 'online' <br /> 
+                uptime: ${process.uptime()} <br />
+                cpuUsage: ${process.cpuUsage().system} <br />
+                memoryUsage: ${process.memoryUsage().heapTotal} <br />
+                environment: ${process.env.NODE_ENV}
+            `
+        });
+
+        expect(result).to.exist;
+        expect(result).to.have.property('ResponseMetadata');
+        expect(result).to.have.property('MessageId');
+
+        process.env.NODE_ENV = 'test';
+    });
+
+    it('16. send', async (): Promise<void> => {
+        process.env.NODE_ENV = 'production';
+
+        const result: any = await MailSender.send({
+            ...app,
+            config: {
+                mail: {
+                    type: 'aws-ses',
+                    user: process.env.MAIL_TEST_AWS_USER,
+                    password: process.env.MAIL_TEST_AWS_PASSWORD,
+                    region: process.env.MAIL_TEST_AWS_REGION
+                }
+            }
+        } as App, {
+            from: process.env.MAIL_TEST_FROM,
+            to: process.env.MAIL_TEST_TO,
+            replyTo: process.env.MAIL_TEST_TO,
             subject: 'Test mail',
             message: `
                 situation: 'online' <br /> 
