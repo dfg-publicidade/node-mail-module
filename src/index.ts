@@ -24,10 +24,13 @@ class MailSender {
 
             throw new Error('Mail config. was not provided.');
         }
-        else if (process.env.NODE_ENV !== 'production' && (!app.config.mail.testMails || app.config.mail.testMails.indexOf(parameters.to) !== -1)) {
-            return Promise.resolve(`Invalid mail ${parameters.to} for ${process.env.NODE_ENV}`);
-        }
         else {
+            if (process.env.NODE_ENV !== 'production') {
+                if (app.config.mail.testMails?.some((mail: string): boolean => parameters.from.split(';').includes(mail))) {
+                    return Promise.resolve(`Invalid mail ${parameters.to} for ${process.env.NODE_ENV}`);
+                }
+            }
+
             const message: string = parameters.template
                 ? await this.getTemplate(parameters)
                 : parameters.message;
