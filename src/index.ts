@@ -25,17 +25,17 @@ class MailSender {
             throw new Error('Mail config. was not provided.');
         }
         else {
-            if (process.env.NODE_ENV !== 'production') {
-                if (app.config.mail.testMails?.some((mail: string): boolean => parameters.from.split(';').includes(mail))) {
-                    return Promise.resolve(`Invalid mail ${parameters.to} for ${process.env.NODE_ENV}`);
-                }
+            if (process.env.NODE_ENV === 'production' || (app.config.mail.testMails
+                && parameters.to.split(';').every((mail: string): boolean => app.config.mail.testMails.includes(mail))
+            )) {
+                const message: string = parameters.template
+                    ? await this.getTemplate(parameters)
+                    : parameters.message;
+
+                return this.sendMail(app, parameters, message);
             }
 
-            const message: string = parameters.template
-                ? await this.getTemplate(parameters)
-                : parameters.message;
-
-            return this.sendMail(app, parameters, message);
+            return Promise.resolve(`Invalid mail ${parameters.to} for ${process.env.NODE_ENV}`);
         }
     }
 

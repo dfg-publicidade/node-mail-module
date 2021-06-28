@@ -15,7 +15,6 @@ const smtpMailSender_1 = __importDefault(require("./mail/smtpMailSender"));
 const debug = debug_1.default('module:mail');
 class MailSender {
     static async send(app, parameters) {
-        var _a;
         debug('Sending mail...');
         if (!parameters || !parameters.from || !parameters.to || !parameters.subject) {
             debug('Mail cannot be sent. Invalid parameters.');
@@ -26,15 +25,14 @@ class MailSender {
             throw new Error('Mail config. was not provided.');
         }
         else {
-            if (process.env.NODE_ENV !== 'production') {
-                if ((_a = app.config.mail.testMails) === null || _a === void 0 ? void 0 : _a.some((mail) => parameters.from.split(';').includes(mail))) {
-                    return Promise.resolve(`Invalid mail ${parameters.to} for ${process.env.NODE_ENV}`);
-                }
+            if (process.env.NODE_ENV === 'production' || (app.config.mail.testMails
+                && parameters.to.split(';').every((mail) => app.config.mail.testMails.includes(mail)))) {
+                const message = parameters.template
+                    ? await this.getTemplate(parameters)
+                    : parameters.message;
+                return this.sendMail(app, parameters, message);
             }
-            const message = parameters.template
-                ? await this.getTemplate(parameters)
-                : parameters.message;
-            return this.sendMail(app, parameters, message);
+            return Promise.resolve(`Invalid mail ${parameters.to} for ${process.env.NODE_ENV}`);
         }
     }
     static async getTemplate(parameters) {
