@@ -32,7 +32,7 @@ class MailSender {
                     : parameters.message;
                 return this.sendMail(app, parameters, message);
             }
-            return Promise.resolve(`Invalid mail ${parameters.to} for ${process.env.NODE_ENV}`);
+            return Promise.reject(new Error(`Invalid mail ${parameters.to} for ${process.env.NODE_ENV}`));
         }
     }
     static async getTemplate(parameters) {

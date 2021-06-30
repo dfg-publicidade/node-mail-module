@@ -150,7 +150,8 @@ describe('index.ts', (): void => {
                 ...app,
                 config: {
                     mail: {
-                        type: 'other'
+                        type: 'other',
+                        testMails: process.env.MAIL_TEST_TO
                     }
                 }
             } as App, {
@@ -172,6 +173,7 @@ describe('index.ts', (): void => {
             config: {
                 mail: {
                     type: 'smtp',
+                    testMails: process.env.MAIL_TEST_TO,
                     host: process.env.MAIL_TEST_HOST,
                     port: process.env.MAIL_TEST_PORT,
                     ssl: process.env.MAIL_TEST_SSL,
@@ -197,6 +199,7 @@ describe('index.ts', (): void => {
             config: {
                 mail: {
                     type: 'smtp',
+                    testMails: process.env.MAIL_TEST_TO,
                     host: process.env.MAIL_TEST_HOST,
                     port: process.env.MAIL_TEST_PORT,
                     ssl: process.env.MAIL_TEST_SSL,
@@ -225,6 +228,7 @@ describe('index.ts', (): void => {
                 config: {
                     mail: {
                         type: 'smtp',
+                        testMails: process.env.MAIL_TEST_TO,
                         host: process.env.MAIL_TEST_HOST,
                         port: process.env.MAIL_TEST_PORT,
                         ssl: process.env.MAIL_TEST_SSL,
@@ -252,6 +256,7 @@ describe('index.ts', (): void => {
             config: {
                 mail: {
                     type: 'smtp',
+                    testMails: process.env.MAIL_TEST_TO,
                     host: process.env.MAIL_TEST_HOST,
                     port: process.env.MAIL_TEST_PORT,
                     ssl: process.env.MAIL_TEST_SSL,
@@ -285,6 +290,7 @@ describe('index.ts', (): void => {
             config: {
                 mail: {
                     type: 'smtp',
+                    testMails: process.env.MAIL_TEST_TO,
                     host: process.env.MAIL_TEST_HOST,
                     port: process.env.MAIL_TEST_PORT,
                     ssl: process.env.MAIL_TEST_SSL,
@@ -324,6 +330,7 @@ describe('index.ts', (): void => {
             config: {
                 mail: {
                     type: 'aws-ses',
+                    testMails: process.env.MAIL_TEST_TO,
                     user: process.env.MAIL_TEST_AWS_USER,
                     password: process.env.MAIL_TEST_AWS_PASSWORD,
                     region: process.env.MAIL_TEST_AWS_REGION
@@ -353,6 +360,7 @@ describe('index.ts', (): void => {
             config: {
                 mail: {
                     type: 'aws-ses',
+                    testMails: process.env.MAIL_TEST_TO,
                     host: process.env.MAIL_TEST_HOST,
                     port: process.env.MAIL_TEST_PORT,
                     ssl: process.env.MAIL_TEST_SSL,
@@ -478,5 +486,33 @@ describe('index.ts', (): void => {
         expect(result).to.have.property('MessageId');
 
         process.env.NODE_ENV = 'test';
+    });
+
+    it('7. send', async (): Promise<void> => {
+        let sendError: any;
+        try {
+            await MailSender.send({
+                ...app,
+                config: {
+                    mail: {
+                        type: 'smtp',
+                        host: process.env.MAIL_TEST_HOST,
+                        port: process.env.MAIL_TEST_PORT,
+                        ssl: process.env.MAIL_TEST_SSL,
+                        user: process.env.MAIL_TEST_USER,
+                        password: process.env.MAIL_TEST_PASSWORD
+                    }
+                }
+            } as App, {
+                from: process.env.MAIL_TEST_FROM,
+                to: process.env.MAIL_TEST_TO,
+                subject: 'Test mail'
+            });
+        }
+        catch (err) {
+            sendError = err;
+        }
+
+        expect(sendError.message).to.be.eq(`Invalid mail ${process.env.MAIL_TEST_TO} for test`);
     });
 });
