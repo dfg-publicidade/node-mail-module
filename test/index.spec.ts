@@ -36,9 +36,7 @@ describe('index.ts', (): void => {
                 name: 'test',
                 version: 'v1'
             },
-            config: {},
-            connectionName: '',
-            db: undefined
+            config: {}
         });
     });
 
