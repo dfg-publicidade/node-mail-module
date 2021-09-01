@@ -59,7 +59,7 @@ class MailSender {
         }
         switch (type) {
             case 'smtp': {
-                debug('Sending meil throug SMTP.');
+                debug('Sending mail throug SMTP.');
                 return smtpMailSender_1.default.sendMail(app, parameters, message);
             }
             case 'aws-ses': {

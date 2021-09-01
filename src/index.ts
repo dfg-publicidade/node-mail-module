@@ -70,7 +70,7 @@ class MailSender {
 
         switch (type) {
             case 'smtp': {
-                debug('Sending meil throug SMTP.');
+                debug('Sending mail throug SMTP.');
 
                 return SmtpMailSender.sendMail(app, parameters, message);
             }
