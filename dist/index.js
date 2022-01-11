@@ -12,7 +12,7 @@ exports.MailSendindErrors = mailSendingErrors_1.default;
 const sesMailSender_1 = __importDefault(require("./mail/sesMailSender"));
 const smtpMailSender_1 = __importDefault(require("./mail/smtpMailSender"));
 /* Module */
-const debug = debug_1.default('module:mail');
+const debug = (0, debug_1.default)('module:mail');
 class MailSender {
     static async send(app, parameters) {
         debug('Sending mail...');
